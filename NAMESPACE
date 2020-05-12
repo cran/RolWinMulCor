@@ -1,0 +1,11 @@
+importFrom("grDevices", "dev.off", "jpeg", "pdf", "png", "postscript")
+importFrom("graphics", "abline", "axis", "contour", "image", "layout",
+             "mtext", "par", "points")
+importFrom("graphics", "plot")
+importFrom("stats", "cor", "cor.test", "lm", "p.adjust", "pf", "time",
+             "ts")
+importFrom("pracma", "detrend")
+importFrom("gtools", "running")
+importFrom("colorspace", "diverge_hcl")
+exportPattern("^[[:alpha:]]+")
+

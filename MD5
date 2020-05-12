@@ -1,0 +1,13 @@
+052e374bf92891b8bc372e184394aed0 *DESCRIPTION
+0d2eeecbceb4664fa0860ec2c042817e *NAMESPACE
+7d374f6c416644961faf04c00b525e43 *R/rolwincor_1win.R
+72ef68d0d3c4fc55bd0b6ffef4b99a2a *R/rolwincor_heatmap.R
+8d701038ff19d215ded71f802fc15f20 *R/rolwinmulcor_1win.R
+cef06039eca11656a001cf5f46ce0fb9 *R/rolwinmulcor_heatmap.R
+4eddc3684b5eb459bc6567d286c7cb35 *data/synthetic_data.rda
+a3777072e54e91f75e399d9fc03d156f *man/RolWinMulCor-package.Rd
+72b67c720c58462ac4a2deffae3eb245 *man/rolwincor_1win.Rd
+e301312bb1604b49248cbbd6066fb969 *man/rolwincor_heatmap.Rd
+6cb66e1e8180fa7df56e407563a289ca *man/rolwinmulcor_1win.Rd
+0fff63d251560282a7e9c8a8e91e6108 *man/rolwinmulcor_heatmap.Rd
+ddd00579285be9c39dfd3efa54602185 *man/synthetic_data.Rd
