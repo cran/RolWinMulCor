@@ -6,6 +6,7 @@ importFrom("stats", "cor", "cor.test", "lm", "p.adjust", "pf", "time",
              "ts")
 importFrom("pracma", "detrend")
 importFrom("gtools", "running")
+importFrom("zoo", "rollapply")
 importFrom("colorspace", "diverge_hcl")
 exportPattern("^[[:alpha:]]+")
 

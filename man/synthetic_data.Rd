@@ -9,4 +9,7 @@ The data set \code{\link{synthetic_data}} contains five columns, the first one i
 }
 \format{One file in ASCII format and columns are separated by spaces. 
 }
+\source{
+Author's own production (Josué M. Polanco-Martínez). 
+}
 \keyword{dataset1}

@@ -4,7 +4,7 @@
 \title{Estimate and plot the Rolling Window Correlation for the bi-variate case 
 }
 \description{
-The \code{\link{rolwincor_1win}} function estimates the rolling (running) window correlation between TWO time series (bi-variate case) sampled on identical time points for ONLY ONE window-length and plots the correlation coefficients and their respective p-values. The \code{\link{rolwincor_1win}} function is highly flexible since this contains a great number of parameters to control the estimation of correlation and the features of the plot output. For example, \code{\link{rolwincor_1win}} function contains parameters to remove the (linear) trend contained in the time series under analysis, to choose different p-value correction methods (which are used to address the multiple comparison problem), or to personalise the plot output. A list of parameters are described in the following lines. 
+The \code{\link{rolwincor_1win}} function estimates the rolling (running) window correlation between TWO time series (bi-variate case) sampled on identical time points for ONLY ONE window-length and plots the correlation coefficients and their respective p-values. To carry out the computational implementation we follow to Telford (2013) and Polanco-Martínez (2019). The \code{\link{rolwincor_1win}} function is highly flexible since this contain a great number of parameters to control the estimation of correlation and the features of the plot output. For example, \code{\link{rolwincor_1win}} function contain parameters to remove the (linear) trend contained in the time series under analysis, to choose different p-value correction methods (which are used to address the multiple comparison problem), or to personalise the plot output. A list of parameters are described in the following lines. 
 }
 \usage{
 rolwincor_1win(inputdata, varnametsX="", varnametsY="", units="", 
@@ -18,10 +18,10 @@ rolwincor_1win(inputdata, varnametsX="", varnametsY="", units="",
 }
 \arguments{
  \item{inputdata}{
-Matrix of 3 columns: time, first variable (``X''), and second variable (``Y''). 
+Matrix of 3 columns: time, first variable (e.g. \eqn{X}), and second variable (e.g. \eqn{Y}). 
 } 
  \item{varnametsX, varnametsY}{
-Names of the first (e.g. ``X'') and second (e.g. ``Y'') variable. Please note that the names of these variables MUST be defined.
+Names of the first (e.g. \eqn{X}) and second (e.g. \eqn{Y}) variable. Please note that the names of these variables MUST be defined.
 } 
  \item{units}{
 Time's unit (e.g. days, weeks, years, etc.) for the variables under analysis. Please note that the units MUST be defined. 
@@ -30,7 +30,7 @@ Time's unit (e.g. days, weeks, years, etc.) for the variables under analysis. Pl
 The colors to be used when the first and second variables are plotted, by default the colors are ``black'' and ``blue,'' respectively, but other colors can be used.
 }
  \item{colCOEF, colPVAL}{
-The colors to be used when the correlation coefficients and their corresponding p-values are plotted, by default the colors ``black'' and ``gray,'' but other colors can be used. 
+The colors to be used when the correlation coefficients and their corresponding p-values are plotted, by default the colors are ``black'' and ``gray,'' but other colors can be used. 
 }
  \item{CEXLAB, CEXAXIS}{
 These parameters are used to plot the sizes of the X-axis and Y-axis labels and X- and Y-axis, by default these parameters have values of 1.15 and 1.05, respectively, but it is possible to use other values. 
@@ -45,13 +45,13 @@ The line-widths to be used when the correlation coefficients and their respectiv
 The method used to estimate the correlations, by default is ``spearman,'' but other options (``pearson'' and ``kendall'') are available (please look at: \R>?cor.test).
 }
  \item{widthwin}{
-Window's size to compute the rolling window correlations, this MUST be odd (i.e. of the form \bold{2m + 1}, where \bold{m} is a natural number), by default a value of 3 is used, but this information MUST be provided.
+Window's size to compute the rolling window correlations, this MUST be odd (i.e. of the form \bold{2m + 1}, where \bold{m} is a natural number), the minimum value is 3 (the default value), but this information MUST be provided.
 }
  \item{Align}{
-To align the rolling object, RolWinMulCor ONLY uses the ``center'' option (please look at: \R>?running) to ensure that variations in the correlation are aligned with the variations in the relationship of the time series under study rather than being shifted. 
+To align the rolling object, RolWinMulCor ONLY uses the ``center'' option (please look at: \R>?running) to ensure that variations in the correlation are aligned with the variations in the relationship of the time series under study rather than being shifted (Polanco-Martínez, 2019). 
 }
  \item{pvalcorectmethod}{
-The p-value correction method to be used, by default the method of Benjamini & Hochberg (BH) is used since this is less conservative and performs much better than Bonferroni, but other six methods (e.g. Holm, Bonferroni, etc.) are available (please look at: \R>?p.adjust).
+The p-value correction method to be used, by default the method of Benjamini and Hochberg (BH) (1995) is used since this is less conservative and performs much better than Bonferroni, but other six methods (e.g. Holm, Bonferroni, etc.) are available (please look at: \R>?p.adjust).
 }
  \item{rmltrd}{
 Remove (by default is ``Y'' or ``y''; please use ``N'' or ``n'' otherwise) the linear trend in the two time series under analysis. 
@@ -79,7 +79,7 @@ Output file name.
 }
 }
 \details{
-The \code{\link{rolwincor_1win}} function estimates the rolling window correlation between TWO time series (bi-variate case) sampled on identical time points for ONLY ONE window-length and plots the rolling correlation coefficients and their respective p-values. \code{\link{rolwincor_1win}} uses the functions \emph{running} (package:gtools) and the native \R functions \emph{cor}, \emph{cor.test}, and \emph{p.adjust} (package:stats). 
+The \code{\link{rolwincor_1win}} function estimates the rolling window correlation between TWO time series (bi-variate case) sampled on identical time points for ONLY ONE window-length and plots the rolling correlation coefficients and their respective p-values. \code{\link{rolwincor_1win}} uses the functions \emph{running} (package:gtools), the native \R functions \emph{cor}, \emph{cor.test}, and \emph{p.adjust} (package:stats), and some pieces of code written specifically to our \R RolWinMulCor package. 
 }
 \value{
 Outputs:
@@ -117,12 +117,17 @@ Telford, R.: Running correlations -- running into problems (2013). <URL: \cr
  # Window length = 21 and plot output in screen format 
  test1_rolwincor_1win <- rolwincor_1win(synthetic_data[,1:3], varnametsX="X", 
                           varnametsY="Y", units="NU", widthwin=21, 
-                          device="screen", ofilename="test1")
+                          device="screen")
  # Window length = 51 and plot output in screen format 
  test2_rolwincor_1win <- rolwincor_1win(synthetic_data[,1:3], varnametsX="X", 
                           varnametsY="Y", units="NU", widthwin=51, 
-                          device="screen", ofilename="test2")
-
+                          device="screen")
+ # Window length = 51 and plot output in PDF format 
+ \donttest{
+  test3_rolwincor_1win <- rolwincor_1win(synthetic_data[,1:3], varnametsX="X", 
+                          varnametsY="Y", units="NU", widthwin=51, 
+                          device="pdf", ofilename="test3")
+}
 }
 \keyword{rolwincor_bivariate}
 \keyword{rolwincor_bivariate_simply_plot}

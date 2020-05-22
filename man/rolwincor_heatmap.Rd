@@ -4,7 +4,7 @@
 \title{Estimate the Rolling Window Correlation for the bi-variate case and plot the results as a heat map 
 }
 \description{
-The \code{\link{rolwincor_heatmap}} function estimates the rolling (running) window correlation between TWO time series (bi-variate case) sampled on identical time points for all the possible (i.e. from 3 to the number of elements of the time series under analysis) window-lengths or for a band of window-lengths and plots the correlation coefficients and their respective p-values (<= 0.05) as a heat map. The \code{\link{rolwincor_heatmap}} function is highly flexible since this contains a great number of parameters to control the estimation of correlation and features of the plot output. A list of parameters are described in the following lines. 
+The \code{\link{rolwincor_heatmap}} function estimates the rolling (running) window correlation between TWO time series (bi-variate case) sampled on identical time points for all the possible (i.e. from 3 to the number of elements of the time series under analysis) window-lengths or for a band of window-lengths and plots the correlation coefficients and their respective p-values (<= 0.05) as a heat map. To carry out the computational implementation we extend the works of Telford (2013) and Polanco-Martínez (2019). The \code{\link{rolwincor_heatmap}} function is highly flexible since this contains a great number of parameters to control the estimation of correlation and features of the plot output. A list of parameters are described in the following lines. 
 }
 \usage{
 rolwincor_heatmap(inputdata, varnametsX="", varnametsY="", units="", 
@@ -17,10 +17,10 @@ rolwincor_heatmap(inputdata, varnametsX="", varnametsY="", units="",
 }
 \arguments{
  \item{inputdata}{
-Matrix of 3 columns: time, first variable (``X''), and second variable (``Y''). 
+Matrix of 3 columns: time, first variable (e.g. \eqn{X}), and second variable (e.g. \eqn{Y}). 
 } 
  \item{varnametsX, varnametsY}{
-Names of the first (e.g. ``X'') and second (e.g. ``Y'') variable. Please note that the names of these two variables MUST be defined.
+Names of the first (e.g. \eqn{X}) and second (e.g. \eqn{Y}) variable. Please note that the names of these two variables MUST be defined.
 } 
  \item{units}{
 Time's unit (e.g. days, weeks, years, etc.) for the variables under analysis. Please note that the units MUST be defined. 
@@ -41,16 +41,16 @@ The method used to estimate the correlations, by default is ``spearman'' but oth
 There are two options to estimate the rolling correlations and to plot the heat map: (1) typewidthwin=``PARTIAL'' to plot a band of windows from widthwin_1 to widthwin_N (both parameters were previously defined), or (2) typewidthwin=``FULL'' to plot all the  possible window-lengths (from 3 to  dim(inputdata)[1]), by default is FULL. 
 }
  \item{widthwin_1}{
-First value for the size (length) of the windows when the option typewidthwin=``PARTIAL'' is selected, by default is 3, but others values can be used. 
+First value for the size (length) of the windows when the option typewidthwin=``PARTIAL'' is selected, the minimum value is 3 (the default value), but you should define this parameter (please note that widthwin_1 < widthwin_N). 
 }
  \item{widthwin_N}{
-Last value for the size (length) of the windows when the option typewidthwin=``PARTIAL'' is selected, by default is dim(inputdata)[1], but other values can be used (please note that widthwin_1 < widthwin_N).
+Last value for the size (length) of the windows when the option typewidthwin=``PARTIAL'' is selected, by default is dim(inputdata)[1], but you should define this parameter (please note that widthwin_1 < widthwin_N).
 }
   \item{Align}{
-To align the rolling object, RolWinMulCor ONLY uses the ``center'' option (please look at: \R>?running) to ensure that variations in the correlation are aligned with the variations in the relationship of the time series under study rather than being shifted.
+To align the rolling object, RolWinMulCor ONLY uses the ``center'' option (please look at: \R>?running) to ensure that variations in the correlation are aligned with the variations in the relationship of the time series under study rather than being shifted (Polanco-Martínez 2019).
 }
  \item{pvalcorectmethod}{
-The p-value correction method to be used, by default the method of Benjamini & Hochberg (BH) is used since this is less conservative and performs much better than Bonferroni, but other six methods (e.g. Holm, Bonferroni, etc.) are available (please look at: \R>?p.adjust).
+The p-value correction method to be used, by default the method of Benjamini and Hochberg (BH) (1995) is used since this is less conservative and performs much better than Bonferroni, but other six methods (e.g. Holm, Bonferroni, etc.) are available (please look at: \R>?p.adjust).
 }
  \item{rmltrd}{
 Remove (by default is ``Y'' or ``y''; please use ``N'' or ``n'' otherwise) the linear trend in the time series under analysis. 
@@ -78,7 +78,7 @@ Output file name.
 }
 }
 \details{
-The \code{\link{rolwincor_heatmap}} function estimates the rolling window correlation between TWO time series (bi-variate case) sampled on identical time points  for all the possible (i.e. from 3 to the number of elements of the time series under analysis) window-lengths or for a band of window-lengths and plots the rolling correlation coefficients and their respective p-values as a heat map. \code{\link{rolwincor_heatmap}} uses the functions \emph{running} (package:gtools) and the native \R functions \emph{cor}, \emph{cor.test}, and \emph{p.adjust} (package:stats). 
+The \code{\link{rolwincor_heatmap}} function estimates the rolling window correlation between TWO time series (bi-variate case) sampled on identical time points  for all the possible (i.e. from 3 to the number of elements of the time series under analysis) window-lengths or for a band of window-lengths and plots the rolling correlation coefficients and their respective p-values as a heat map. \code{\link{rolwincor_heatmap}} uses the functions \emph{running} (package:gtools), the native \R functions \emph{cor}, \emph{cor.test}, and \emph{p.adjust} (package:stats), and some pieces of code written specifically to our \R RolWinMulCor package. 
 }
 \value{
 Outputs:
@@ -114,14 +114,14 @@ Telford, R.: Running correlations -- running into problems (2013). <URL: \cr
  # Testing the function rolwincor_heatmap
  #  typewidthwin="PARTIAL," window lengths from 21 to 31 and plot output in screen format 
  test1_rolwincor_heatmap <- rolwincor_heatmap(synthetic_data[,1:3], varnametsX="X", 
-                             varnametsY="Y", units="NU", device="screen", typewidthwin="PARTIAL", 
-                             widthwin_1=21, widthwin_N=31, ofilename="test1")
+                             varnametsY="Y", units="NU", typewidthwin="PARTIAL", 
+                             widthwin_1=21, widthwin_N=31, device="screen",)
  # This example could takes a long time! 
  # typewidthwin="FULL" and pot output in PDF format 
  \donttest{
  test2_rolwincor_heatmap <- rolwincor_heatmap(synthetic_data[,1:3], varnametsX="X", 
-                             varnametsY="Y", units="NU", device="pdf", typewidthwin="FULL", 
-                             ofilename="test2")
+                             varnametsY="Y", units="NU", typewidthwin="FULL", 
+                             device="pdf", ofilename="test2")
 
  }
 }

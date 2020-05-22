@@ -26,17 +26,18 @@
 
  rolwinmulcor_heatmap <- function(inputdata, varnametsY="Y", 
 		varnametsX="", units="", coltsY="black", coltsX="", 
-	        CEXLAB=1.15, CEXAXIS=1.5, LWDtsY=1, LWDtsX="", 
-	   	CorMethod="spearman", typewidthwin="FULL", 
-                widthwin_1=3, widthwin_N=dim(inputdata)[1],  
-		Align="center", pvalcorectmethod="BH", rmltrd="Y", 
-		Scale="Y", device="screen", Hfig=900, Wfig=900, 
-	        resfig=150, Hpdf=7, Wpdf=7, NUMLABX=5, ofilename) {
+	        LWDtsY=1, LWDtsX="", CEXLAB=1.15, CEXAXIS=1.5, 
+		NUMLABX=5, parcen=c(0.5,25), rmltrd="Y", Scale="Y", 
+ 	        typewidthwin="FULL", widthwin_1=3, 
+	        widthwin_N=dim(inputdata)[1], Align="center", 
+	        pvalcorectmethod="BH", device="screen", Hfig=900, 
+		Wfig=900, resfig=150, Hpdf=7, Wpdf=7,  
+	        ofilename) {
 
  #------------------------------------------------------------------------#
  # Description of variables (INPUTS): 
- # 1.  inputdata:  matrix of P columns (time, dependent variable ("Y"), 
- #     		   independent variables ("X1", "X2", ... "Xp-1"), the 
+ # 1.  inputdata:  matrix of P columns (time, dependent variable ("Y"), and
+ #     		   independent variables ("X1", "X2", ... "Xp-1"). The 
  #		   number of independent variables MUST be at least 2
  # 2.  varnametsY: name of the dependent variable ("Y"), please note that 
  #                 you MUST be define (the name) this variable
@@ -48,45 +49,46 @@
  # 6.  coltsX:     the colors to be used to plot the independent variables 
  #		   ("X1", "X2",... "Xp-1"), please note that you MUST supply
  #                 this information (e.g. coltsX=c("red","blue",...))
- # 7.  CEXLAB:     size for labels
- # 8.  CEXAXIS:    size for axis 
- # 9.  LWDtsY:     the line-width for the dependent variable ("Y"), by 
+ # 7.  LWDtsY:     the line-width for the dependent variable ("Y"), by 
  # 	           default it has a value of 1, but other values can be used 
- # 10. LWDtsX:     the line-width for the independent variables ("X1", "X2", 
+ # 8.  LWDtsX:     the line-width for the independent variables ("X1", "X2", 
  #   		   ...), please note that you MUST supply this information 
  # 		   (e.g. LWDtsX = c(1,1,2,...))
- # 11. CorMethod:  the method used to estimate the correlations, by default 
- #                 is "spearman" but other options ("pearson" and "kendall")
- #                 can be used (please look at: R>?cor.test)
- # 12. widthwin_1: first value (size) of the windows (by default is 3) 
+ # 9.  CEXLAB:     size for labels
+ # 10. CEXAXIS:    size for axis 
+ # 11. NUMLABX:    number of labels for all X's axis 
+ # 12  parcen      contains two parameters to control the position of the title, 
+ #                 fist value (by default is 0.5) is used to center the title and 
+ #                 the other (by default is 25) to define the spaces between 
+ #                 the names of variables (please loot at R>?mtext). 
+ # 13. rmltrd:     remove (by default is "Y" or "y"; please use "N" or 
+ #                 "n" otherwise) linear trends in data analysed 
+ # 14. Scale:      scale (by default is "Y" or "y"; please use "N" or "n" 
+ #   	           otherwise) or "normalize" or "standardize" the data analysed
+ # 15. typewidthwin: "FULL" is to estimate and plot windows from 3, 5,...,
+ #                 to dim(inputdata)[1]), the other option is "PARTIAL" 
+ # 16. widthwin_1: first value (size) of the windows (by default is 3) 
  # 	 	   when the option typewidthwin="PARTIAL" is selected. 
- # 13. widthwin_N: last value (size) of the windows (by default is 
+ # 17. widthwin_N: last value (size) of the windows (by default is 
  #                 dim(inputdata)[1], i.e. (number of datums in inputdata) 
  # 		   when the option typewidthwin="PARTIAL" is selected 
- # 14. typewidthwin: "FULL" is to estimate and plot windows from 3, 5,...,
- #                 to dim(inputdata)[1]), the other option is "PARTIAL" 
- # 15. Align:      to align the rolling object, RolWinMulCor ONLY uses 
- #                 the "center" option (please look at: R>?running)  
- # 		   [please fist load/install the package "gtools"]
- # 16. pvalcorectmethod: p-value correction method (please look at: 
+ # 18. Align:      to align the rolling object, RolWinMulCor ONLY uses 
+ #                 the "center" option (please look at: R>?rollapply)  
+ # 		   [please fist install/load the package "zoo"]
+ # 19. pvalcorectmethod: p-value correction method (please look at: 
  #                 R>?p.adjust), by default we use the method of Benjamini 
- # 		   & Hochberg (BH), but other 6 methods can be used
- # 17. rmltrd:     remove (by default is "Y" or "y"; please use "N" or 
- #                 "n" otherwise) linear trends in data analysed 
- # 18. Scale:      scale (by default is "Y" or "y"; please use "N" or "n" 
- #   	           otherwise) or "normalize" or "standardize" the data analysed
- # 19. device:     the kind of output plot (please look at: R?device), 
+ # 		   & Hochberg (BH), but other six methods can be used
+ # 20. device:     the kind of output plot (please look at: R?device), 
  #                 you can use: "png", "jpeg/jpg", "eps", "pdf" and "screen" 
- # 20. Hfig:       plot's height (device) in "png" and "jpg" format (>R?pdf)
- # 21. Wfig:       plot's width (deice) in "png" and "jpg" format (>R?postscript)
- # 22. resfig:     resolution for the plot in "png" and "jpg" format (>R?jpeg)
- # 23. Hpdf:       plot's height (device) in "pdf" or "eps" format (>R?pdf)
- # 24. Wpdf:       width's plot (device) in "pdf" or "eps" format (>R?postscript)
- # 25. NUMLABX:    number of labels for all X's axis 
+ # 21. Hfig:       plot's height (device) in "png" and "jpg" format (>R?pdf)
+ # 22. Wfig:       plot's width (deice) in "png" and "jpg" format (>R?postscript)
+ # 23. resfig:     resolution for the plot in "png" and "jpg" format (>R?jpeg)
+ # 24. Hpdf:       plot's height (device) in "pdf" or "eps" format (>R?pdf)
+ # 25. Wpdf:       width's plot (device) in "pdf" or "eps" format (>R?postscript)
  # 26. ofilename:  output file name
  #------------------------------------------------------------------------#
- 
-  # To reset the par options modified within this function!
+
+ # To reset the par options modified within this function!
  oldpar <- par(no.readonly = TRUE)
  on.exit(par(oldpar))   
 
@@ -130,9 +132,9 @@
  # 	    independent variables X1, X2,...  
  if (dim(inputdata)[2] < 4) 
   stop("The input data MUST be an array or matrix with at least 4 columns 
-   (first column the time, the second the dependent variable (Y) and 
-   the others the independent variables (X1, X2,...). Thank you for 
-   using RolWinMulCor package.)")
+   (first column the time, second column the dependent variable (Y) and 
+   the others columns the independent variables (X1, X2,...). Thank you 
+   for using RolWinMulCor package.)")
 
  # Check 2: the time steps MUST be regular - no gaps! 
  Deltat <- diff(inputdata[,1])  # Deltat is the temporal resolution! 
@@ -174,7 +176,8 @@
  ts1 <- ts(inputdata[,2], start=inputdata[1,1], end=inputdata[NL,1], 
   	   deltat=unique(Deltat)) # ts1 = Y
  ts2 <- ts(inputdata[,3:NP], start=inputdata[1,1], end=inputdata[NL,1], 
-	    deltat=unique(Deltat)) #ts2 = X (X1, X2, ..., Xp) 
+	   deltat=unique(Deltat)) #ts2 = X (X1, X2, ..., Xp) 
+ Z   <- cbind(ts1, ts2) # To be used in the running cor./fun. (rollapply)
 
  time.runcor <- time(ts1)
  Nrun        <- length(time.runcor)   
@@ -222,25 +225,25 @@
  the_matrixCOR <- array(NA, c(nwin, NL-2))
  the_matrixPVA <- array(NA, c(nwin, NL-2))
  
- #############	        Auxiliary   function              ############
- #Function to estimate the squared multiple correlation coefficient 
- cor.def  <- function(Y, X) { 
-  # where X (dependent variables) is a matrix with P columns and M rows! 
-  lm_estimate <- lm(Y ~ X)
-  summary_lm  <- summary(lm_estimate) 
-  adjRsqu     <- summary_lm$adj.r.squared
-  Fstat       <- summary_lm$fstatistic[1]
-  pvalueF     <- pf(summary_lm$fstatistic[1], summary_lm$fstatistic[2], 
-                   summary_lm$fstatistic[3], lower.tail=F)
-  namesLS     <- c("Squared_multiple_cor_coef", "F-statistics", "P-value")
-  LIST        <- list(adjRsqu, Fstat, pvalueF) 
- return(LIST)
- }
-
  #############	BEGIN:	The big-for 	#############
  for (w in 1:nwin) { 
-  rc.ts1_ts2_tmp <- gtools::running(ts1, ts2, fun=cor.def,
-		     width=Rwidthwin[w], align=Align)
+  rc.ts1_ts2_tmp <- t( zoo::rollapply(Z, width=Rwidthwin[w], 
+    #############        Auxiliary   function             ############
+    FUN=function(Z) { 
+    P <- dim(Z)[2]
+    # where Z[,1] is the dependent and Z[,2:P] the independent variable/s
+    lm_estimate <- lm(Z[,1] ~ Z[,2:P], data=as.data.frame(Z))
+    summary_lm  <- summary(lm_estimate) 
+    adjRsqu     <- summary_lm$adj.r.squared
+    Fstat       <- summary_lm$fstatistic[1]
+    pvalueF     <- pf(summary_lm$fstatistic[1], summary_lm$fstatistic[2], 
+                   summary_lm$fstatistic[3], lower.tail=F)
+    namesLS     <- c("Squared_multiple_cor_coef", "F-statistics", "P-value")
+    LIST        <- cbind(adjRsqu, Fstat, pvalueF) 
+    return(LIST)
+    }, 
+   by.column=FALSE, align="center") ) 
+
   rc.ts1_ts2     <- rc.ts1_ts2_tmp[1,]
   pvalrc.ts1_ts2 <- rc.ts1_ts2_tmp[3,]
   ncompa         <- length(rc.ts1_ts2) 
@@ -279,18 +282,34 @@
  }
  # -------------------------------------------------------------
  # Plot data (plot 1)
- # To be used in "main"
- strspl_vnam <- unlist(strsplit(varnametsX, ","))
- compos_vnam <- paste(strspl_vnam, rep("(", length(strspl_vnam)), 
-                      coltsX, rep(")", length(strspl_vnam)), sep="", 
-		      collapse = ", ") 
- plot(ts1, t="l", col=coltsY, las=1, xlab="", ylab="", xaxt="n", 
+ # To be used in "plot" and "mtext"
+  miny <- min(apply(Z, FUN=min, 2))
+  maxy <- max(apply(Z, FUN=max, 2))
+  plot(ts1, t="l", col=coltsY, las=1, xlab="", ylab="", xaxt="n", 
   yaxt="n", xaxs="i", yaxs="i", xlim=c(time(ts1)[1], time(ts1)[NL]), 
-  main=paste(varnametsY, "(", coltsY, ")", "<-", compos_vnam, sep=""), 
-  lwd=LWDtsY)
+  ylim=c(1.10*miny, 1.10*maxy), lwd=LWDtsY)
+ # To plot the names of variables with their corresponding colors
+  labnam   <- c(paste(varnametsY, " <-   ", sep=""), varnametsX)
+  colrs    <- c(coltsY, coltsX)
+
+  firtX  <- nchar(varnametsX[1])
+  bytim  <- cumsum(nchar(c(paste(varnametsY, " <-  ", sep=""), varnametsX)))
+  schar  <- sum(nchar(c(paste(varnametsY, " <-  ", sep=""), varnametsX)))
+  at_tmp <- round((time(ts1)[Nrun] - time(ts1)[1])/round(schar/(length(labnam)))/parcen[1])
+  at_times <- seq(time(ts1)[at_tmp], length.out=dim(Z)[2], by=parcen[2]) 
+
+ for(i in 1:dim(Z)[2]) { 
+  if(i == 1) 
+   mtext(at=at_times[i], labnam[i], col=colrs[i], adj=0.5, font=2) 
+  if (i > 1 & i < dim(Z)[2])
+   mtext(at=at_times[i], paste(labnam[i], ",", sep=""), col=colrs[i], adj=0.5, font=2) 
+  if (i == dim(Z)[2]) 
+    mtext(at=at_times[i], labnam[i], col=colrs[i], adj=0.5, font=2)
+  }
+
  for(j in 1:(NP-2)){
  points(ts2[,j], t="l", col=coltsX[j], las=1, xlab="", ylab="", 
-  lwd=LWDtsX[j])
+  lwd=LWDtsX[j]) 
  }
  axis(1, at=floor(seq(time.runcor[1], time.runcor[Nrun], length.out=NUMLABX)),
   labels=floor(seq(time.runcor[1], time.runcor[Nrun], length.out=NUMLABX)),
