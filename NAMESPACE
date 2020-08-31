@@ -8,5 +8,6 @@ importFrom("pracma", "detrend")
 importFrom("gtools", "running")
 importFrom("zoo", "rollapply")
 importFrom("colorspace", "diverge_hcl")
+importFrom("scales", "alpha")
 exportPattern("^[[:alpha:]]+")
 

@@ -1,93 +1,48 @@
 \name{rolwincor_1win}
 \alias{rolwincor_1win}
 \alias{rolwincor_1win}
-\title{Estimate and plot the Rolling Window Correlation for the bi-variate case 
+\title{Estimate the Rolling Window Correlation for the bi-variate case to be plotted its outputs as a single one window 
 }
 \description{
-The \code{\link{rolwincor_1win}} function estimates the rolling (running) window correlation between TWO time series (bi-variate case) sampled on identical time points for ONLY ONE window-length and plots the correlation coefficients and their respective p-values. To carry out the computational implementation we follow to Telford (2013) and Polanco-Martínez (2019). The \code{\link{rolwincor_1win}} function is highly flexible since this contain a great number of parameters to control the estimation of correlation and the features of the plot output. For example, \code{\link{rolwincor_1win}} function contain parameters to remove the (linear) trend contained in the time series under analysis, to choose different p-value correction methods (which are used to address the multiple comparison problem), or to personalise the plot output. A list of parameters are described in the following lines. 
+The \code{\link{rolwincor_1win}} function estimates (correlation coefficients and their respective p-values) the rolling (running) window correlation between TWO time series (bi-variate case) sampled on identical time points for ONLY ONE window-length (time-scale). To carry out the computational implementation we follow to Telford (2013), Polanco-Martínez (2019) and Polanco-Martínez (2020). The \code{\link{rolwincor_1win}} function is highly flexible since this contain several parameters to control the estimation of correlation. For example, \code{\link{rolwincor_1win}} function contain parameters to remove the (linear) trend contained in the time series under analysis or to choose different p-value correction methods (which are used to address the multiple comparison problem). A list of parameters are described in the following lines. 
 }
 \usage{
-rolwincor_1win(inputdata, varnametsX="", varnametsY="", units="", 
-               coltsX="black", coltsY="blue", colCOEF="black", 
-               colPVAL="gray", CEXLAB=1.15, CEXAXIS=1.05, LWDtsX=1, 
-               LWDtsY=1, LWDcoef=1, LWDpval=1, CorMethod="spearman", 
-               widthwin=3, Align="center", pvalcorectmethod="BH", 
-               rmltrd="Y", Scale="Y", device="screen", Hfig=1200, 
-               Wfig=900, resfig=150, Hpdf=5.15, Wpdf=13.5, 
-               HeigWin1=2.05, HeigWin2=2.75, ofilename)
+rolwincor_1win(inputdata, varX="", varY="", CorMethod="pearson", widthwin=3,
+               Align="center", pvalcorectmethod="BH", rmltrd=TRUE, Scale=TRUE)
 }
 \arguments{
  \item{inputdata}{
 Matrix of 3 columns: time, first variable (e.g. \eqn{X}), and second variable (e.g. \eqn{Y}). 
 } 
- \item{varnametsX, varnametsY}{
+ \item{varX, varY}{
 Names of the first (e.g. \eqn{X}) and second (e.g. \eqn{Y}) variable. Please note that the names of these variables MUST be defined.
 } 
- \item{units}{
-Time's unit (e.g. days, weeks, years, etc.) for the variables under analysis. Please note that the units MUST be defined. 
-}
- \item{coltsX, coltsY}{
-The colors to be used when the first and second variables are plotted, by default the colors are ``black'' and ``blue,'' respectively, but other colors can be used.
-}
- \item{colCOEF, colPVAL}{
-The colors to be used when the correlation coefficients and their corresponding p-values are plotted, by default the colors are ``black'' and ``gray,'' but other colors can be used. 
-}
- \item{CEXLAB, CEXAXIS}{
-These parameters are used to plot the sizes of the X-axis and Y-axis labels and X- and Y-axis, by default these parameters have values of 1.15 and 1.05, respectively, but it is possible to use other values. 
-}
- \item{LWDtsX, LWDtsY}{
-Line-widths for the first and the second variable when these are plotted, by default these have values of 1, but other values (widths) can be used. 
-}
- \item{LWDcoef, LWDpval}{
-The line-widths to be used when the correlation coefficients and their respective p-values are plotted, by default these parameters have a value of 1, but it is possible to use other values.
-}
  \item{CorMethod}{
-The method used to estimate the correlations, by default is ``spearman,'' but other options (``pearson'' and ``kendall'') are available (please look at: \R>?cor.test).
+The method used to estimate the correlations, by default is ``pearson,'' but other options (``spearman'' and ``kendall'') are available (please look at: \R>?cor.test).
 }
  \item{widthwin}{
-Window's size to compute the rolling window correlations, this MUST be odd (i.e. of the form \bold{2m + 1}, where \bold{m} is a natural number), the minimum value is 3 (the default value), but this information MUST be provided.
+Window size to compute the rolling window correlations. This value can be an even or odd number of at least three (the default value), and this parameter MUST be provided. 
 }
  \item{Align}{
-To align the rolling object, RolWinMulCor ONLY uses the ``center'' option (please look at: \R>?running) to ensure that variations in the correlation are aligned with the variations in the relationship of the time series under study rather than being shifted (Polanco-Martínez, 2019). 
+To align the rolling object, RolWinMulCor ONLY uses the ``center'' option by default (please look at: \R>?running) to ensure that variations in the correlation are aligned with the variations in the relationship of the time series under study rather than being shifted (Polanco-Martínez, 2019; 2020), but the ``left'' and ``right'' options can be used, but if \emph{widthwin} is an even number it will not be possible to use the ``center'' option (please look at: \R>?running).
 }
  \item{pvalcorectmethod}{
-The p-value correction method to be used, by default the method of Benjamini and Hochberg (BH) (1995) is used since this is less conservative and performs much better than Bonferroni, but other six methods (e.g. Holm, Bonferroni, etc.) are available (please look at: \R>?p.adjust).
+The p-value correction method to be used, by default the method of Benjamini and Hochberg (BH) (1995) is used since this is less conservative and performs much better than Bonferroni, but other five methods (Holm, Hochberg, Bonferroni, Hommel, and Benjamini and Yekutieli) are available (please look at: \R>?p.adjust). Moreover, \emph{pvalcorectmethod} admits a pass-through option named ``none'' (p-values will not be corrected).
 }
  \item{rmltrd}{
-Remove (by default is ``Y'' or ``y''; please use ``N'' or ``n'' otherwise) the linear trend in the two time series under analysis. 
+Remove (by default is ``TRUE''; ``FALSE'' otherwise) the linear trend in the two time series under analysis. 
 }
  \item{Scale}{
-Scale (by default is ``Y'' or ``y''; please use ``N'' or ``n'' otherwise) is used to ``normalize'' or ``standardize'' the time series under analysis.
-}
- \item{device}{
-Kind of plot output (please look at: \R>?device), there are five options: ``png'', ``jpeg/jpg'', ``eps'', ``pdf'' and ``screen.'' By default device is ``screen.''
-}
- \item{Hfig, Wfig}{
-Plot's height and width (for the device) for ``png'' and ``jpg'' format (look at \R>?png or \R>?jpg), by default Hfig and Wfig have values of 1200 and 900, but it is possible to use other values. 
-}
-  \item{resfig}{
-Image resolution (in ``ppi'') for the plot in ``png'' and ``jpg'' format (look at \R>?png, \R>?jpg, or \R>?jpeg), by default this has a value of 150, but it is possible to use other image resolutions. 
-}
- \item{Hpdf, Wpdf}{
-Plot's height and width (for the device) for ``pdf'' or ``eps'' format (>\R?pdf or >\R?postscript), by default Hpdf and Wpdf have values of 5.15 and 13.5, but other values can be used. 
-}
- \item{HeigWin1, HeigWin2}{
-Proportion of window's size to plot the time series under analysis (HeigWin1) and the rolling window correlation coefficients and p-values (HeigWin2) (look at: \R>?layout to get more information about ``layout''). By default HeigWin1 and HeigWin2 have values of 2.05 and 2.75, but other values can be used. 
-}
- \item{ofilename}{
-Output file name. 
+Scale (by default is ``TRUE''; ``FALSE'' otherwise) is used to ``normalize'' or ``standardize'' the time series under analysis.
 }
 }
 \details{
-The \code{\link{rolwincor_1win}} function estimates the rolling window correlation between TWO time series (bi-variate case) sampled on identical time points for ONLY ONE window-length and plots the rolling correlation coefficients and their respective p-values. \code{\link{rolwincor_1win}} uses the functions \emph{running} (package:gtools), the native \R functions \emph{cor}, \emph{cor.test}, and \emph{p.adjust} (package:stats), and some pieces of code written specifically to our \R RolWinMulCor package. 
+The \code{\link{rolwincor_1win}} function estimates the rolling window correlation between TWO time series (bi-variate case) sampled on identical time points for ONLY ONE window-length (time-scale) and plots the rolling correlation coefficients and their respective p-values. \code{\link{rolwincor_1win}} uses the functions \emph{running} (package:gtools), the native \R functions \emph{cor}, \emph{cor.test}, and \emph{p.adjust} (package:stats), and some pieces of code written specifically to our \R RolWinMulCor package. 
 }
 \value{
 Outputs:
 
-Plot output: \emph{screen} or \emph{'plot_bivariate_' + 'ofilename + .png, .jpg, .eps} or \emph{.pdf'}. 
-
-Numerical output: a list containing \emph{Correlation_coefficients}, \emph{P_values_corrected}, \cr 
-and \emph{P_values_not_corrected}, which are self-explanatory. 
+Numerical output: a list containing \emph{Correlation_coefficients}, \emph{P_values_corrected}, and \emph{P_values_not_corrected}, which are self-explanatory, as well as \emph{CorMethod}, \emph{left_win}, \emph{righ_win}, and \emph{widthwin}, which indicate the method used to estimate the correlations, first and last time element of the rolling correlation matrix, and the window-length (time-scale).
 }
 \author{
 Josué M. Polanco-Martínez (a.k.a. jomopo).\cr
@@ -95,7 +50,7 @@ DeustoTech - Deusto Institute of Technology, \cr
 Faculty of Engineering, University of Deusto, \cr
 Avda. Universidades, 24, Bilbao, SPAIN.\cr 
 Web1: \url{https://scholar.google.es/citations?user=8djLIhcAAAAJ&hl=en}.\cr
-Web2: \url{http://www.researchgate.net/profile/Josue_Polanco-Martinez}.\cr
+Web2: \url{https://www.researchgate.net/profile/Josue_Polanco-Martinez}.\cr
 Email: \email{josue.m.polanco@gmail.com}, \email{josue.polanco@deusto.es} \cr
 }
 \references{
@@ -103,31 +58,16 @@ Benjamini, Y., and Hochberg, Y. (1995). Controlling the false discovery rate: a 
 
 Polanco-Martínez, J. M. (2019). Dynamic relationship analysis between NAFTA stock markets using nonlinear, nonparametric, non-stationary methods. Nonlinear Dynamics, 97(1), 369-389. <URL: \url{https://doi.org/10.1007/s11071-019-04974-y}>. \cr 
 
+Polanco-Martínez, J. M. (2020). RolWinMulCor : an R package for estimating rolling window multiple correlation in ecological time series. Ecological Informatics (Ms. ECOINF-D-20-00263 accepted for publication, 19/08/2020).\cr
+
 Telford, R.: Running correlations -- running into problems (2013). <URL: \cr
 \url{https://quantpalaeo.wordpress.com/2013/01/04/running-correlations-running-into-problems/}>. \cr
 }
 \examples{
- # Loading packages
- library("RolWinMulCor") 
- library("gtools") 
- library("pracma") 
- # Loading data set  
- data(synthetic_data)
- # Testing the function 'rolwincor_1win' (bi-variate case)
- # Window length = 21 and plot output in screen format 
- test1_rolwincor_1win <- rolwincor_1win(synthetic_data[,1:3], varnametsX="X", 
-                          varnametsY="Y", units="NU", widthwin=21, 
-                          device="screen")
- # Window length = 51 and plot output in screen format 
- test2_rolwincor_1win <- rolwincor_1win(synthetic_data[,1:3], varnametsX="X", 
-                          varnametsY="Y", units="NU", widthwin=51, 
-                          device="screen")
- # Window length = 51 and plot output in PDF format 
- \donttest{
-  test3_rolwincor_1win <- rolwincor_1win(synthetic_data[,1:3], varnametsX="X", 
-                          varnametsY="Y", units="NU", widthwin=51, 
-                          device="pdf", ofilename="test3")
-}
+# Testing the function rolwincor_1win (bi-variate case)
+# Window length = 21 and plot output in screen format 
+test_rolwincor_1win <- rolwincor_1win(syntDATA, varX="X", varY="Y", CorMethod="spearman", 
+                                      widthwin=21, Align="center", pvalcorectmethod="BH")
 }
 \keyword{rolwincor_bivariate}
 \keyword{rolwincor_bivariate_simply_plot}

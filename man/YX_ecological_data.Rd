@@ -1,9 +1,9 @@
 \name{YX_ecological_data}
 \alias{YX_ecological_data}
-\title{Ecological data set to test the functions of \emph{RolWinMulCor}. 
+\title{Ecological data set to test the functions of \emph{RolWinMulCor} 
 }
 \description{
-The data set \code{\link{YX_ecological_data}} contains four columns, the first one (``Years'') is the time (years from 1700 to 1936), the second is the first component principal (``PC1'') of the reconstructed Atlantic Bluefin Tuna (BFT) captures (Ganzedo et al. 2016, Polanco-Martínez et al. 2018), the third are reconstructions of sea surface temperature (``SST'') from the Northern Hemisphere (NH) (Mann et al. 2009), and the fourth column contains reconstructions of total solar irradiance (``TSI'') (Lean 2000). 
+The data set \code{\link{YX_ecological_data}} contains four columns, the first one (``Years'') is the time (years from 1700 to 1936), the second is the first component principal (``PC1'') of the reconstructed Atlantic Bluefin Tuna (BFT) captures (Ganzedo et al., 2016, Polanco-Martínez et al., 2018), the third are reconstructions of sea surface temperature (``SST'') from the Northern Hemisphere (NH) (Mann et al. 2009), and the fourth column contains reconstructions of total solar irradiance (``TSI'') (Lean 2000). 
 }
 \usage{data(YX_ecological_data)
 }
