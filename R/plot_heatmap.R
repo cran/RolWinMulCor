@@ -132,13 +132,14 @@
  }
 
   # Transforming input data to time series objects! 
-  Deltat <- diff(inputdata[,1]) 
+  #Deltat <- diff(inputdata[,1]) 
   NL     <- dim(inputdata)[1]
   NP     <- dim(inputdata)[2]
-  ts1    <- ts(inputdata[,2], start=inputdata[1,1], end=inputdata[NL,1], 
-     	     deltat=unique(Deltat)) # ts1 = Y
-  ts2    <- ts(inputdata[,3:NP], start=inputdata[1,1], end=inputdata[NL,1], 
-	     deltat=unique(Deltat)) #ts2 = X (X1, X2, ..., Xp) 
+  freq   <- length((inputdata[,1]))/length(unique(inputdata[,1]))
+  ts1    <- ts(inputdata[,2], start=c(inputdata[1,1],1), 
+            end=c(inputdata[NL,1],freq), deltat=1/freq) # ts1 = Y
+  ts2    <- ts(inputdata[,3:NP], start=c(inputdata[1,1],1), 
+	    end=c(inputdata[NL,1],freq), deltat=1/freq) #ts2 = X (X1, X2, ..., Xp) 
   Z      <- cbind(ts1, ts2) # To be used in the running cor./fun. (rollapply)
   #
   time.runcor <- time(ts1)
@@ -187,12 +188,16 @@
  # Multiscale Window correlation (plot 2)
  # To take into account the statistical significance in the image-plot! 
  new_the_matrixCOR <- the_matrixCOR
- id.xy <- which(the_matrixPVA < 0.05, arr.ind=TRUE) 
- #id.xy <- which(the_matrixPVA <= 0.01, arr.ind=TRUE) 
- #id.xy <- which(the_matrixPVA <= 0.05, arr.ind=TRUE) 
+ id.xy <- which(the_matrixPVA <= 0.05, arr.ind=TRUE) 
+ if (length(id.xy) > 0) {
  for (k in 1:dim(id.xy)[1]) { 
   new_the_matrixCOR[id.xy[k,1], id.xy[k,2]] <- NA
  } 
+ } 
+ if (length(id.xy) == 0) {
+ cat("W A R N I N G: there is no correlation coefficients statistically
+ significant. \n") 
+ }
  image(t(the_matrixCOR), xlab="", ylab="", las=1, 
   col=Palette, xaxt="n", yaxt="n")
  image(t(new_the_matrixCOR), xlab="", ylab="", las=1, 
@@ -239,8 +244,8 @@
   miny <- min(apply(Z, FUN=min, 2))
   maxy <- max(apply(Z, FUN=max, 2))
   plot(ts1, t="l", col=coltsY, las=1, xlab="", ylab="", xaxt="n", 
-  yaxt="n", xaxs="i", yaxs="i", xlim=c(time(ts1)[1], time(ts1)[NL]), 
-  ylim=c(1.10*miny, 1.10*maxy), lwd=LWDtsY)
+   yaxt="n", xaxs="i", yaxs="i", xlim=c(time(ts1)[1], time(ts1)[NL]), 
+   ylim=c(1.10*miny, 1.10*maxy), lwd=LWDtsY)
  # To plot the names of variables with their corresponding colors
   labnam   <- c(paste(varY, " <-   ", sep=""), varX)
   colrs    <- c(coltsY, coltsX)
@@ -275,9 +280,15 @@
  # To take into account the statistical significance in the image-plot! 
  new_the_matrixCOR <- the_matrixCOR
  id.xy <- which(the_matrixPVA <= 0.05, arr.ind=TRUE) 
+ if (length(id.xy) > 0) {
  for (k in 1:dim(id.xy)[1]) { 
   new_the_matrixCOR[id.xy[k,1], id.xy[k,2]] <- NA
  } 
+ } 
+ if (length(id.xy) == 0) {
+ cat("W A R N I N G: there is no correlation coefficients statistically
+ significant. \n") 
+ }
  image(t(the_matrixCOR), xlab="", ylab="", las=1, 
   col=Palette, xaxt="n", yaxt="n")
  image(t(new_the_matrixCOR), xlab="", ylab="", las=1, 

@@ -66,14 +66,14 @@
     Thank you for using our RolWinMulCor package. \n ")
 
   # Check 2: the times should be regular/evenly spaced - no gaps! 
-  Deltat <- diff(inputdata[,1])  # Deltat is the temporal resolution! 
-  if (length(unique(Deltat)) != 1)
-   stop("\n The input data (time) have some gaps (it's irregular), 
-    please consider to face this before using RolWinMulCor.  We 
-    recommend you our BINCOR package and method (also in CRAN; 
-    https://cran.r-project.org/package=BINCOR), but other packages 
-    and methods can be used. Thank you for using our RolWinCor 
-    package. \n")
+  #Deltat <- diff(inputdata[,1])  # Deltat is the temporal resolution! 
+  #if (length(unique(Deltat)) != 1)
+   cat("\n W A R N I N G: The input data must be regular (evenly spaced 
+   time). Otherwise, please, consider to address this drawback before 
+   using NonParRolCor. We recommend you our BINCOR package and method 
+   (also in CRAN; https://cran.r-project.org/package=BINCOR), but other 
+   packages and methods can be used. Thank you so much for using our 
+   NonParRolCor package. \n")
 
 ############################################################################
   # Check 3: widthwin MUST be odd if Align="center" otherwise 
@@ -99,11 +99,12 @@
   # ----------------------------------------------------------------------- 
 
   # Transforming input data to time series objects! 
-  NL  <- dim(inputdata)[1]
-  ts1 <- ts(inputdata[,2], start=inputdata[1,1], end=inputdata[NL,1], 
-     	    deltat=unique(Deltat))
-  ts2 <- ts(inputdata[,3], start=inputdata[1,1], end=inputdata[NL,1], 
-	    deltat=unique(Deltat))
+  NL   <- dim(inputdata)[1]
+  freq <- length((inputdata[,1]))/length(unique(inputdata[,1]))
+  ts1  <- ts(inputdata[,2], start=c(inputdata[1,1],1), 
+             end=c(inputdata[NL,1],freq), deltat=1/freq) 
+  ts2  <- ts(inputdata[,3], start=c(inputdata[1,1],1), 
+             end=c(inputdata[NL,1],freq), deltat=1/freq)
 
   # ------------------------------------------------------------------
   # Computing the rolling window (running) correlation and p-values  
@@ -157,10 +158,10 @@
  namesLS <- c("Correlation_coefficients", "P_values_corrected", 
               "P_values_not_corrected", "CorMethod", "left_win", 
 	      "righ_win", "widthwin") 
- LIST    <- list(cbind(time.runcor[left_win:(Nrun-righ_win)], 
-             cor_pval_run[1,]), cbind(time.runcor[left_win:(Nrun-righ_win)], 
-             cor_pval_run[2,]), cbind(time.runcor[left_win:(Nrun-righ_win)], 
-             CORTD_pval_ts1_ts2), CorMethod, left_win, righ_win, widthwin)
+ LIST <- list(cbind(time.runcor[left_win:(Nrun-righ_win)], cor_pval_run[1,]), 
+              cbind(time.runcor[left_win:(Nrun-righ_win)], CORTD_pval_ts1_ts2), 
+              cbind(time.runcor[left_win:(Nrun-righ_win)], cor_pval_run[2,]), 
+              CorMethod, left_win, righ_win, widthwin)
  names(LIST) <- namesLS
 
  return(LIST)

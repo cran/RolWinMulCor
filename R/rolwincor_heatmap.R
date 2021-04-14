@@ -85,14 +85,14 @@
    RolWinMulCor package. \n")
 
  # Check 2: the time steps MUST be regular/evenly - no gaps! 
- Deltat <- diff(inputdata[,1])  # Deltat is the temporal resolution! 
- if (length(unique(Deltat)) != 1)
-  stop("\n The input data (time) have some gaps (it's irregular), please, 
-   consider to face this drawback before using RolWinMulCor. We 
-   recommend you our BINCOR package and method (also in CRAN; 
-   https://cran.r-project.org/package=BINCOR), but other packages 
-   and methods can be used. Thank you much for using our RolWinMulCor 
-   package. \n")
+ #Deltat <- diff(inputdata[,1])  # Deltat is the temporal resolution! 
+ #if (length(unique(Deltat)) != 1)
+  cat("\n W A R N I N G: The input data must be regular (evenly spaced 
+   time). Otherwise, please, consider to address this drawback before 
+   using NonParRolCor. We recommend you our BINCOR package and method 
+   (also in CRAN; https://cran.r-project.org/package=BINCOR), but other 
+   packages and methods can be used. Thank you so much for using our 
+   NonParRolCor package. \n")
 
 ############################################################################
  # Check 3.1: if Align="center" only estimate windows of the form 2p + 1
@@ -127,11 +127,12 @@
  # ----------------------------------------------------------------------- 
 
  # Transforming input data to time series object 
- NL  <- dim(inputdata)[1]
- ts1 <- ts(inputdata[ ,2], start=inputdata[1,1], end=inputdata[NL,1], 
-  	   deltat=unique(Deltat))
- ts2 <- ts(inputdata[ ,3], start=inputdata[1,1], end=inputdata[NL,1], 
-	   deltat=unique(Deltat))
+ NL   <- dim(inputdata)[1]
+ freq <- length((inputdata[,1]))/length(unique(inputdata[,1]))
+ ts1  <- ts(inputdata[,2], start=c(inputdata[1,1],1), 
+            end=c(inputdata[NL,1],freq), deltat=1/freq)
+ ts2  <- ts(inputdata[,3], start=c(inputdata[1,1],1), 
+	    end=c(inputdata[NL,1],freq), deltat=1/freq)
 
  time.runcor <- time(ts1)
  Nrun        <- length(time.runcor)   
